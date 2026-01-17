@@ -19,7 +19,6 @@ internal const val notificationGroup: String = "external google-java-formatter"
 internal const val name: String = "external google-java-formatter"
 internal const val timeoutInSeconds = 10
 internal const val timeoutMessage = "$name: timeout of $timeoutInSeconds reached."
-internal val application = ApplicationManager.getApplication()
 
 class ExternalJavaFormatter : AbstractDocumentFormattingService() {
   private val pendingRequests = Collections.synchronizedSet(mutableSetOf<Document>())
@@ -29,7 +28,7 @@ class ExternalJavaFormatter : AbstractDocumentFormattingService() {
   override fun canFormat(file: PsiFile): Boolean =
     "JAVA" == file.fileType.name
         && null != getRelevantJdk(file.project)
-        && true == getConfiguration(file.project).enabled
+        && getConfiguration(file.project).enabled
 
   private fun getRelevantJdk(project: Project): Sdk? = ProjectRootManager.getInstance(project).projectSdk
   private fun getConfiguration(project: Project): Configuration =
@@ -43,8 +42,11 @@ class ExternalJavaFormatter : AbstractDocumentFormattingService() {
     // return if formatting already in progress
     if (!pendingRequests.add(document)) return
 
+    val sdk = getRelevantJdk(context.project) ?: return
+    val config = getConfiguration(context.project)
+
     // enqueue new async request
-    FormattingRequestExecutor(context, document, getRelevantJdk(context.project)!!, getConfiguration(context.project))
+    FormattingRequestExecutor(context, document, sdk, config)
       .also {
         if (application.isHeadlessEnvironment) execute(it, document)
         else object : Task.Backgroundable(context.project, name, false) {
@@ -55,7 +57,13 @@ class ExternalJavaFormatter : AbstractDocumentFormattingService() {
 
   private fun execute(request: FormattingRequestExecutor, document: Document) = try {
     request.executeExternalFormatterProcess()
+  } catch (e: Exception) {
+    LOG.warn("Formatting failed", e)
   } finally {
     pendingRequests.remove(document)
+  }
+
+  companion object {
+    private val LOG = com.intellij.openapi.diagnostic.Logger.getInstance(ExternalJavaFormatter::class.java)
   }
 }

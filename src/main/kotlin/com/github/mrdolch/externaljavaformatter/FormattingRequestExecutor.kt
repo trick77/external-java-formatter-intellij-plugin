@@ -16,6 +16,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.projectRoots.Sdk
 import com.intellij.openapi.util.ThrowableComputable
 import com.intellij.openapi.util.io.FileUtilRt
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.vfs.encoding.EncodingManager
 import java.io.File
 import java.io.FileWriter
@@ -26,7 +27,7 @@ class FormattingRequestExecutor(private val context: FormattingContext, private 
   private val notifications = FormattingNotificationService.getInstance(context.project)
 
   init {
-    if (configuration.useStandardIn != true) FileDocumentManager.getInstance().saveDocument(document)
+    if (!configuration.useStandardIn) FileDocumentManager.getInstance().saveDocument(document)
   }
 
   internal fun executeExternalFormatterProcess() {
@@ -35,8 +36,10 @@ class FormattingRequestExecutor(private val context: FormattingContext, private 
     with(OSProcessHandler(commandLine)) {
       addProcessListener(FormattingDoneListener(this@FormattingRequestExecutor, this, document.text))
       startNotify()
-      waitFor(timeoutInSeconds * 1000L).let {
-        if (!it) notifications.reportError(notificationGroup, name, timeoutMessage)
+      val completed = waitFor(timeoutInSeconds * 1000L)
+      if (!completed) {
+        destroyProcess()
+        notifications.reportError(notificationGroup, name, timeoutMessage)
       }
     }
   }
@@ -51,8 +54,9 @@ class FormattingRequestExecutor(private val context: FormattingContext, private 
 
     override fun processTerminated(event: ProcessEvent) = when {
       event.exitCode != 0 -> request.notifications.reportError(notificationGroup, "FormattingError", output.stderr)
-      application.isWriteAccessAllowed -> request.updateDocument(output.stdout)
+      ApplicationManager.getApplication().isWriteAccessAllowed -> request.updateDocument(output.stdout)
       else -> with(request) {
+        val application = ApplicationManager.getApplication()
         val updateDocumentFun = { updateDocument(output.stdout) }
         val asWriteActionFun = { application.runWriteAction(ThrowableComputable(updateDocumentFun)) }
         val asUndoActionFun = { CommandProcessor.getInstance().runUndoTransparentAction(asWriteActionFun) }
@@ -77,6 +81,9 @@ class FormattingRequestExecutor(private val context: FormattingContext, private 
   }
 
   companion object {
+    private val CLASS_PATH_SEPARATOR = "[:;]+".toRegex()
+    private val WHITESPACE = "\\s+".toRegex()
+    private val NEWLINES = "\\n+".toRegex()
 
     fun createCommandLine(fileToFormat: File, sdk: Sdk, workingDir: String?, mainClass: String?, classPath: String?, arguments: String?, vmOptions: String?): GeneralCommandLine {
       return SimpleJavaParameters().let { params ->
@@ -84,16 +91,16 @@ class FormattingRequestExecutor(private val context: FormattingContext, private 
         params.workingDirectory = workingDir
         params.mainClass = mainClass
         classPath?.run {
-          trim().split("[:;]+".toRegex()).forEach(params.classPath::add)
+          trim().split(CLASS_PATH_SEPARATOR).forEach(params.classPath::add)
         }
         arguments?.run {
-          trim().split("\\s+".toRegex()).forEach { argument ->
+          trim().split(WHITESPACE).forEach { argument ->
             if (argument != "{}") params.programParametersList.add(argument)
             else params.programParametersList.add(fileToFormat.absolutePath)
           }
         }
         vmOptions?.run {
-          trim().split("\\n+".toRegex()).forEach(params.vmParametersList::add)
+          trim().split(NEWLINES).forEach(params.vmParametersList::add)
         }
         params.toCommandLine().withCharset(StandardCharsets.UTF_8)
       }

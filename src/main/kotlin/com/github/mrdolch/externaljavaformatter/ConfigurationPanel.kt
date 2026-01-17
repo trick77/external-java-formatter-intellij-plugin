@@ -10,6 +10,7 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.projectRoots.Sdk
 import com.intellij.openapi.roots.ProjectRootManager
+import com.intellij.openapi.ui.Messages
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.uiDesigner.core.GridConstraints
 import com.intellij.uiDesigner.core.GridLayoutManager
@@ -18,7 +19,14 @@ import com.intellij.util.ui.JBUI
 import java.awt.Dimension
 import java.awt.Font
 import java.io.File
-import javax.swing.*
+import javax.swing.JButton
+import javax.swing.JCheckBox
+import javax.swing.JComponent
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JScrollPane
+import javax.swing.JTextArea
+import javax.swing.JTextField
 import kotlin.math.max
 
 
@@ -57,8 +65,8 @@ internal class ConfigurationPanel(private val project: Project) : BaseConfigurab
 
   override fun reset() {
     val configuration = project.getService(PersistConfigurationService::class.java).state
-    enabled.isSelected = configuration.enabled ?: false
-    useStandardIn.isSelected = configuration.useStandardIn ?: false
+    enabled.isSelected = configuration.enabled
+    useStandardIn.isSelected = configuration.useStandardIn
     classPath.text = configuration.classPath
     mainClass.text = configuration.mainClass
     arguments.text = configuration.arguments
@@ -130,17 +138,19 @@ internal class ConfigurationPanel(private val project: Project) : BaseConfigurab
 
   private fun formatTestCode() {
     if (!enabled.isSelected) {
-      JOptionPane.showMessageDialog(
-        testButton, "Formatter must be enabled via the checkbox.",
-        "Formatting could not be started", JOptionPane.ERROR_MESSAGE
+      Messages.showErrorDialog(
+        project,
+        "Formatter must be enabled via the checkbox.",
+        "Formatting Could Not Be Started"
       )
       return
     }
     val projectSdk: Sdk? = ProjectRootManager.getInstance(project).projectSdk
     if (projectSdk == null) {
-      JOptionPane.showMessageDialog(
-        testButton, "A project SDK must be selected under Project settings.",
-        "Formatting could not be started", JOptionPane.ERROR_MESSAGE
+      Messages.showErrorDialog(
+        project,
+        "A project SDK must be selected under Project settings.",
+        "Formatting Could Not Be Started"
       )
       return
     }
@@ -159,15 +169,15 @@ internal class ConfigurationPanel(private val project: Project) : BaseConfigurab
       testCode.text = stdOut
       testCode.caretPosition = max(firstDiffPos, 0)
       testCode.requestFocus()
-      JOptionPane.showMessageDialog(
-        testButton,
+      Messages.showInfoMessage(
+        project,
         stdErr.ifBlank { "Ok - Using SDK ${projectSdk.name}/${projectSdk.versionString}" },
-        "Formatting was successfully completed", JOptionPane.INFORMATION_MESSAGE
+        "Formatting Was Successfully Completed"
       )
-    } else JOptionPane.showMessageDialog(
-      testButton,
+    } else Messages.showErrorDialog(
+      project,
       stdErr.ifBlank { "Error $exitCode - Using SDK ${projectSdk.name}/${projectSdk.versionString}" },
-      "Formatting was terminated with an error $exitCode", JOptionPane.ERROR_MESSAGE
+      "Formatting Was Terminated With an Error $exitCode"
     )
   }
 
