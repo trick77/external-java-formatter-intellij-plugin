@@ -3,12 +3,12 @@
 ![Build](https://github.com/trick77/external-java-formatter-intellij-plugin/workflows/Build/badge.svg)
 
 <!-- Plugin description -->
-<p>This plugin enables the integration of any Java formatter into the project.</p>
-<p>Unlike other formatters, the SDK of the project is used instead of the Intellij VM when the formatter is called.
-   This solves the problem where formatters could not format code from a newer SDK.</p>
-<p>The configuration panel allows you to select the main class and specify further parameters.</p>
-<p>The <a href="https://github.com/MrDolch/configurable-java-format">configurable-java-format</a> formatter, based on
-   the google-java-format style but with a line length of 120 characters, is set as the default setting.</p>
+<p>This plugin allows you to integrate any Java formatter into your project.</p>
+<p>Unlike other formatters, it uses the project's SDK instead of the IntelliJ VM.
+   This solves the problem of formatters being unable to format code that uses a newer SDK.</p>
+<p>The configuration panel allows you to select the main class and specify additional parameters.</p>
+<p>The default formatter is <a href="https://github.com/MrDolch/configurable-java-format">configurable-java-format</a>,
+   which is based on google-java-format but with a line length of 120 characters.</p>
 <!-- Plugin description end -->
 
 ## Installation
