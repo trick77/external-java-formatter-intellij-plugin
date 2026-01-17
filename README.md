@@ -1,7 +1,5 @@
 # external-java-format-intellij-plugin
 
-![Build](https://github.com/trick77/external-java-formatter-intellij-plugin/workflows/Build/badge.svg)
-
 <!-- Plugin description -->
 <p>This plugin allows you to integrate any Java formatter into your project.</p>
 <p>Unlike other formatters, it uses the project's SDK instead of the IntelliJ VM.
