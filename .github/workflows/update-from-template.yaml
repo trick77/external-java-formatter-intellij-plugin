@@ -69,7 +69,24 @@ jobs:
           echo "Creating update branch"
           git branch ${{ env.UPDATE_BRANCH }} template/${{ env.REMOTE_BRANCH }}
           git branch --unset-upstream ${{ env.UPDATE_BRANCH }}
-          
+
+          echo "Removing unwanted template files"
+          git checkout ${{ env.UPDATE_BRANCH }}
+          rm -rf \
+            .github \
+            .idea/icon.png \
+            src/main/kotlin/org/jetbrains/plugins/template \
+            src/main/resources/messages/MyBundle.properties \
+            src/test/kotlin \
+            src/test/testData \
+            qodana.yml \
+            codecov.yml \
+            CODE_OF_CONDUCT.md \
+            2>/dev/null || true
+          git add -A
+          git diff --cached --quiet || git commit -m "Remove unwanted template files"
+          git checkout -
+
           echo "Pushing update branch"
           git push -f -u origin ${{ env.UPDATE_BRANCH }}
           
