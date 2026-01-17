@@ -1,6 +1,7 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.intellij.platform.gradle.tasks.PrepareSandboxTask
 
 plugins {
   id("java") // Java support
@@ -15,6 +16,39 @@ plugins {
 
 group = providers.gradleProperty("pluginGroup").get()
 version = providers.gradleProperty("pluginVersion").get()
+
+// Configurable Java Format configuration
+val configurableJavaFormatVersion = providers.gradleProperty("configurableJavaFormatVersion").get()
+val formatterJarName = "configurable-java-format-$configurableJavaFormatVersion-all-deps.jar"
+val formatterDownloadUrl = "https://github.com/trick77/configurable-google-java-format/releases/download/$configurableJavaFormatVersion/$formatterJarName"
+val formatterLibDir = layout.buildDirectory.dir("formatter-lib")
+val formatterJarFile = formatterLibDir.map { it.file(formatterJarName) }
+
+// Download formatter JAR from GitHub releases
+val downloadFormatterJar by tasks.registering {
+    description = "Downloads configurable-java-format JAR from GitHub releases"
+    group = "build setup"
+
+    val jarFile = formatterJarFile.get().asFile
+    val downloadUrl = formatterDownloadUrl
+    val jarName = formatterJarName
+
+    inputs.property("downloadUrl", downloadUrl)
+    outputs.file(jarFile)
+
+    doLast {
+        jarFile.parentFile.mkdirs()
+        if (!jarFile.exists()) {
+            logger.lifecycle("Downloading $jarName from GitHub releases...")
+            ant.withGroovyBuilder {
+                "get"("src" to downloadUrl, "dest" to jarFile, "skipexisting" to "false")
+            }
+            logger.lifecycle("Downloaded to ${jarFile.absolutePath}")
+        } else {
+            logger.lifecycle("Using cached $jarName")
+        }
+    }
+}
 
 // Set the JVM language level used to build the project.
 kotlin {
@@ -34,7 +68,7 @@ repositories {
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
   testImplementation(libs.junit)
-  runtimeOnly(fileTree("$projectDir/src/main/resources/lib"))
+  runtimeOnly(files(formatterJarFile))
 
   // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
   intellijPlatform {
@@ -134,6 +168,14 @@ tasks {
 
   publishPlugin {
     dependsOn(patchChangelog)
+  }
+
+  named("processResources") {
+    dependsOn(downloadFormatterJar)
+  }
+
+  withType<PrepareSandboxTask> {
+    dependsOn(downloadFormatterJar)
   }
 }
 
