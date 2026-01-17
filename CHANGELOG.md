@@ -4,6 +4,7 @@
 
 ## [1.0.14]
 
+- Use Java 25 toolchain with Java 21 bytecode compatibility
 - Fix nullable Boolean properties for type safety
 - Add safe SDK null check to prevent NPE in formatDocument
 - Add exception logging for formatting failures
