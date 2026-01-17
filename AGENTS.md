@@ -47,4 +47,14 @@ This is an IntelliJ Platform plugin that integrates external Java formatters (li
 
 ### Default Configuration
 
-The plugin ships with `configurable-java-format` (google-java-format variant with 120-char line width) bundled in `src/main/resources/lib/`. The default main class is `com.google.googlejavaformat.java.Main`.
+The plugin uses `configurable-java-format` (google-java-format variant with 120-char line width). The JAR is downloaded from GitHub releases at build time to `build/formatter-lib/`. The default main class is `com.google.googlejavaformat.java.Main`.
+
+## Release Process
+
+Push a tag to trigger a release:
+
+```bash
+git tag v1.0.x && git push origin v1.0.x
+```
+
+This triggers the GitHub Actions workflow which builds and creates a GitHub release.
