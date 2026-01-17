@@ -1,9 +1,6 @@
 # external-java-format-intellij-plugin
 
-![Build](https://github.com/MrDolch/external-java-format-intellij-plugin/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/23827.svg)](https://plugins.jetbrains.com/plugin/23827)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/23827.svg)](https://plugins.jetbrains.com/plugin/23827)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=MrDolch_external-java-formatter-intellij-plugin&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=MrDolch_external-java-formatter-intellij-plugin)
+![Build](https://github.com/trick77/external-java-formatter-intellij-plugin/workflows/Build/badge.svg)
 
 <!-- Plugin description -->
 <p>This plugin enables the integration of any Java formatter into the project.</p>
@@ -29,6 +26,8 @@
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
 ---
+Forked from [MrDolch/external-java-formatter-intellij-plugin](https://github.com/MrDolch/external-java-formatter-intellij-plugin).
+
 Plugin based on the [IntelliJ Platform Plugin Template][template].
 
 [template]: https://github.com/JetBrains/intellij-platform-plugin-template
