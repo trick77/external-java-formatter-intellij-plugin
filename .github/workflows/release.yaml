@@ -42,10 +42,8 @@ jobs:
           See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/master/CHANGELOG.md#${{ steps.version.outputs.releasenumber }}) for details.
 
           ## Installation
-          The plugin is listed on the [Marketplace](https://plugins.jetbrains.com/plugin/23827).
-
-          Open the plugin Marketplace in your IDE (``File > Settings > Plugins > Marketplace``),
-          search for the plugin and hit the install button.
+          Download the plugin ZIP file below and install it manually:
+          **Settings** > **Plugins** > **⚙️** > **Install plugin from disk...**
 
     - name: Upload Assets
       uses: shogo82148/actions-upload-release-asset@v1
