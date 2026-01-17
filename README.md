@@ -13,17 +13,8 @@
 
 ## Installation
 
-- Using IDE built-in plugin system:
-
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "
-  external-java-format-intellij-plugin"</kbd> >
-  <kbd>Install Plugin</kbd>
-
-- Manually:
-
-  Download the [latest release](https://github.com/MrDolch/external-java-format-intellij-plugin/releases/latest) and
-  install it manually using
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
+Download the [latest release](https://github.com/trick77/external-java-formatter-intellij-plugin/releases/latest) from GitHub Releases and install it manually using
+<kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
 ---
 Forked from [MrDolch/external-java-formatter-intellij-plugin](https://github.com/MrDolch/external-java-formatter-intellij-plugin).
