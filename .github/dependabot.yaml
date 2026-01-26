@@ -11,6 +11,10 @@ updates:
       interval: "weekly"
       day: "sunday"
       time: "07:00"
+    groups:
+      jetbrains:
+        patterns:
+          - "org.jetbrains.*"
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
