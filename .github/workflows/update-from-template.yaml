@@ -65,15 +65,16 @@ jobs:
           fi
           
           echo "Found new commits on the template repo"
-          
-          echo "Creating update branch"
-          git branch ${{ env.UPDATE_BRANCH }} template/${{ env.REMOTE_BRANCH }}
-          git branch --unset-upstream ${{ env.UPDATE_BRANCH }}
+
+          echo "Creating update branch from current branch"
+          current_branch=$(git branch --show-current)
+          git checkout -b ${{ env.UPDATE_BRANCH }}
+
+          echo "Merging template into update branch"
+          git merge template/${{ env.REMOTE_BRANCH }} --allow-unrelated-histories --no-edit
 
           echo "Removing unwanted template files"
-          git checkout ${{ env.UPDATE_BRANCH }}
           rm -rf \
-            .github \
             .idea/icon.png \
             src/main/kotlin/org/jetbrains/plugins/template \
             src/main/resources/messages/MyBundle.properties \
@@ -85,13 +86,11 @@ jobs:
             2>/dev/null || true
           git add -A
           git diff --cached --quiet || git commit -m "Remove unwanted template files"
-          git checkout -
+          git checkout $current_branch
 
           echo "Pushing update branch"
           git push -f -u origin ${{ env.UPDATE_BRANCH }}
-          
-          echo "Getting current branch"
-          current_branch=$(git branch --show-current)
+
           echo "Current branch is $current_branch"
           echo "current_branch=$current_branch" >> $GITHUB_OUTPUT
 
