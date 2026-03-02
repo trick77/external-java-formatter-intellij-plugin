@@ -1,4 +1,4 @@
-package com.github.mrdolch.externaljavaformatter
+package com.github.trick77.externaljavaformatter
 
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.process.CapturingProcessHandler

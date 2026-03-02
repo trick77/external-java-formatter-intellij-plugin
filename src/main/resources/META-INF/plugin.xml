@@ -1,17 +1,17 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.mrdolch.externaljavaformatter</id>
+    <id>com.github.trick77.externaljavaformatter</id>
     <name>External Java Formatter</name>
-    <vendor>mrdolch</vendor>
+    <vendor>trick77</vendor>
 
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <formattingService
-                implementation="com.github.mrdolch.externaljavaformatter.ExternalJavaFormatter"/>
+                implementation="com.github.trick77.externaljavaformatter.ExternalJavaFormatter"/>
         <projectConfigurable
                 displayName="External-Java-Formatter Settings"
-                instance="com.github.mrdolch.externaljavaformatter.ConfigurationPanel"/>
+                instance="com.github.trick77.externaljavaformatter.ConfigurationPanel"/>
     </extensions>
 
 </idea-plugin>

@@ -1,6 +1,6 @@
-package com.github.mrdolch.externaljavaformatter
+package com.github.trick77.externaljavaformatter
 
-import com.github.mrdolch.externaljavaformatter.PersistConfigurationService.Configuration
+import com.github.trick77.externaljavaformatter.PersistConfigurationService.Configuration
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.configurations.SimpleJavaParameters
 import com.intellij.execution.process.CapturingProcessAdapter
