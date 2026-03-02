@@ -71,10 +71,36 @@ jobs:
           git checkout -b ${{ env.UPDATE_BRANCH }}
 
           echo "Merging template into update branch"
-          git merge template/${{ env.REMOTE_BRANCH }} --allow-unrelated-histories --no-edit
+          git merge template/${{ env.REMOTE_BRANCH }} --allow-unrelated-histories --no-edit || true
+
+          # Resolve any merge conflicts automatically
+          if git diff --name-only --diff-filter=U | grep -q .; then
+            echo "Resolving merge conflicts"
+            git diff --name-only --diff-filter=U | while read file; do
+              # Check if file was deleted on our side (modify/delete conflict)
+              if ! git ls-tree HEAD -- "$file" > /dev/null 2>&1; then
+                echo "Resolving modify/delete conflict: $file (keeping deletion)"
+                git rm -f "$file" 2>/dev/null || true
+              else
+                # Content conflict - keep our version
+                echo "Resolving content conflict: $file (keeping ours)"
+                git checkout --ours -- "$file" 2>/dev/null || true
+                git add "$file"
+              fi
+            done
+
+            # Fail if there are still unresolved conflicts
+            if git diff --name-only --diff-filter=U | grep -q .; then
+              echo "::error::Unresolved merge conflicts remain"
+              exit 1
+            fi
+
+            git commit --no-edit || true
+          fi
 
           echo "Removing unwanted template files"
           rm -rf \
+            .github/workflows/run-ui-tests.yml \
             .idea/icon.png \
             src/main/kotlin/org/jetbrains/plugins/template \
             src/main/resources/messages/MyBundle.properties \
