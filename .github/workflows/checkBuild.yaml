@@ -73,7 +73,7 @@ jobs:
         path: build/libs/external-java-formatter-intellij-plugin-*.jar
         if-no-files-found: error
 
-  code-style:
+  verify:
     runs-on: ubuntu-latest
 
     strategy:
@@ -83,7 +83,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v5
-      
+
     - name: Set up JDK
       uses: actions/setup-java@v5
       with:
@@ -91,5 +91,12 @@ jobs:
         java-version: ${{ matrix.java }}
         cache: 'gradle'
 
-    - name: Run Checkstyle
-      run: ./gradlew checkstyleMain checkstyleTest -PcheckstyleEnabled=true
+    - name: Run Plugin Verification
+      run: ./gradlew verifyPlugin
+
+    - name: Collect Plugin Verifier Result
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: pluginVerifier-result-java-${{ matrix.java }}
+        path: build/reports/pluginVerifier

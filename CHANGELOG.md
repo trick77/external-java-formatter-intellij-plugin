@@ -1,6 +1,15 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-# external-java-format-intellij-plugin Changelog
+# external-java-formatter-intellij-plugin Changelog
+
+## [Unreleased]
+
+- Add unit tests for command-line argument parsing, classpath/VM-option splitting, and diff-position logic
+- Remove unused Checkstyle plugin and CI job (no Java sources to lint)
+- Run IntelliJ Plugin Verifier in the Check Build workflow
+- Remove leftover template scaffolding and duplicate CI workflows
+- Fix stale plugin name and default-formatter link in README
+- Align `pluginGroup` with the plugin id and package name
 
 ## [1.0.14]
 
