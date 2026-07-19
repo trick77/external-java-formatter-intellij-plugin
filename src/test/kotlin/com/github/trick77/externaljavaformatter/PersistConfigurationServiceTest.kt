@@ -25,6 +25,6 @@ class PersistConfigurationServiceTest {
     // Guards against drift between the runtime default and the JAR downloaded by build.gradle.kts
     // (configurableJavaFormatVersion in gradle.properties). Update both together on a version bump.
     val config = PersistConfigurationService.Configuration()
-    assertEquals("configurable-java-format-1.34.1-fork.1-all-deps.jar", config.classPath)
+    assertEquals("configurable-java-format-1.35.0-fork.1-all-deps.jar", config.classPath)
   }
 }
