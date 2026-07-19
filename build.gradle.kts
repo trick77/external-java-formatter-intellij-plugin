@@ -145,7 +145,9 @@ intellijPlatform {
 
   pluginVerification {
     ides {
-      recommended()
+      // Verify only against the platform we build against (the latest supported IDE),
+      // instead of every recommended release across the compatibility range.
+      current()
     }
   }
 }
