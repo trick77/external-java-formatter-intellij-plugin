@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+- Use a Java 21 toolchain so test classes and the test runtime stay on Java 21 (fixes the build after the Kotlin 2.4 upgrade, which emitted Java 25 test bytecode)
+
 - Add unit tests for command-line argument parsing, classpath/VM-option splitting, and diff-position logic
 - Remove unused Checkstyle plugin and CI job (no Java sources to lint)
 - Run IntelliJ Plugin Verifier in the Check Build workflow
