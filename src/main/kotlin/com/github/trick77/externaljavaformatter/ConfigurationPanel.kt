@@ -30,6 +30,17 @@ import javax.swing.JTextField
 import kotlin.math.max
 
 
+/**
+ * Index of the first character that differs between [a] and [b], or -1 if the strings are equal.
+ * Used to place the caret at the first change after test-formatting.
+ */
+internal fun findFirstDiffPos(a: String, b: String): Int {
+  if (a == b) return -1
+  var i = 0
+  while (i < a.length && i < b.length && a[i] == b[i]) i++
+  return i
+}
+
 internal class ConfigurationPanel(private val project: Project) : BaseConfigurable(), SearchableConfigurable {
   private val panel: JPanel = JPanel()
   private val enabled: JCheckBox = JCheckBox("Enable external-java-formatter")
@@ -202,13 +213,6 @@ internal class ConfigurationPanel(private val project: Project) : BaseConfigurab
       }
     }, "Test Formatting ...", true, project)
     return Triple(exitCode, stdOut, stdErr)
-  }
-
-  private fun findFirstDiffPos(a: String, b: String): Int {
-    var i = 0
-    if (a == b) return -1
-    while (i < a.length && i < b.length && a[i] == b[i]) i++
-    return i
   }
 
   private fun left(row: Int) = GridConstraints(

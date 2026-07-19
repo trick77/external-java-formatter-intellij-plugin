@@ -90,20 +90,23 @@ class FormattingRequestExecutor(private val context: FormattingContext, private 
         params.jdk = sdk
         params.workingDirectory = workingDir
         params.mainClass = mainClass
-        classPath?.run {
-          trim().split(CLASS_PATH_SEPARATOR).forEach(params.classPath::add)
-        }
-        arguments?.run {
-          trim().split(WHITESPACE).forEach { argument ->
-            if (argument != "{}") params.programParametersList.add(argument)
-            else params.programParametersList.add(fileToFormat.absolutePath)
-          }
-        }
-        vmOptions?.run {
-          trim().split(NEWLINES).forEach(params.vmParametersList::add)
-        }
+        classPath?.let { parseClassPath(it).forEach(params.classPath::add) }
+        arguments?.let { parseArguments(it, fileToFormat.absolutePath).forEach(params.programParametersList::add) }
+        vmOptions?.let { parseVmOptions(it).forEach(params.vmParametersList::add) }
         params.toCommandLine().withCharset(StandardCharsets.UTF_8)
       }
     }
+
+    /** Split a class-path string on `:`/`;` separators. */
+    internal fun parseClassPath(classPath: String): List<String> =
+      classPath.trim().split(CLASS_PATH_SEPARATOR)
+
+    /** Split arguments on whitespace, substituting the file path for the `{}` placeholder. */
+    internal fun parseArguments(arguments: String, filePath: String): List<String> =
+      arguments.trim().split(WHITESPACE).map { if (it == "{}") filePath else it }
+
+    /** Split VM options on newlines (one option per line). */
+    internal fun parseVmOptions(vmOptions: String): List<String> =
+      vmOptions.trim().split(NEWLINES)
   }
 }
