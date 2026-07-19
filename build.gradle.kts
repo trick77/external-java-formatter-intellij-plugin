@@ -46,9 +46,11 @@ val downloadFormatterJar by tasks.registering {
     }
 }
 
-// Set the JVM language level used to build the project.
+// Set the JVM language level used to build the project. IntelliJ 2024.2 runs on JBR 21, so plugin
+// bytecode must stay at Java 21 to load in the IDE. A Java 21 toolchain keeps main, test, and the
+// test runtime consistent (a Java 25 toolchain leaked Java 25 bytecode into the test compilation).
 kotlin {
-  jvmToolchain(25)
+  jvmToolchain(21)
   compilerOptions {
     jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
   }
