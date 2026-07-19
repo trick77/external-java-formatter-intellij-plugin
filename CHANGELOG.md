@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+- Update the default formatter to configurable-google-java-format 1.35.0-fork.1
+
 - Use a Java 21 toolchain so test classes and the test runtime stay on Java 21 (fixes the build after the Kotlin 2.4 upgrade, which emitted Java 25 test bytecode)
 
 - Add unit tests for command-line argument parsing, classpath/VM-option splitting, and diff-position logic

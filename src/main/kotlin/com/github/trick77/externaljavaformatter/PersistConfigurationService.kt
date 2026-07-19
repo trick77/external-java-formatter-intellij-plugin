@@ -19,7 +19,7 @@ class PersistConfigurationService : PersistentStateComponent<PersistConfiguratio
   class Configuration {
     var enabled: Boolean = false
     var useStandardIn: Boolean = true
-    var classPath: String? = "configurable-java-format-1.34.1-fork.1-all-deps.jar"
+    var classPath: String? = "configurable-java-format-1.35.0-fork.1-all-deps.jar"
     var mainClass: String? = "com.google.googlejavaformat.java.Main"
     var arguments: String? = "--width=120 --assume-filename {} -"
     var workingDir: String? = Path.of(
