@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+- Build against IntelliJ Platform 2025.2.6.2 (was 2024.2.5); verified compatible from 2023.3 to 2025.2
+
 - Update the default formatter to configurable-google-java-format 1.35.0-fork.1
 
 - Use a Java 21 toolchain so test classes and the test runtime stay on Java 21 (fixes the build after the Kotlin 2.4 upgrade, which emitted Java 25 test bytecode)
