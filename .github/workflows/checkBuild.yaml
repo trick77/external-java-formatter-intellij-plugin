@@ -12,12 +12,6 @@ on:
       - 'assets/**'
   pull_request:
     branches: [ master ]
-    paths-ignore: 
-      - '**.md'
-      - '.config/**'
-      - '.github/**'
-      - '.idea/**'
-      - 'assets/**'
 
 jobs:
   build:
