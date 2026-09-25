@@ -6,3 +6,6 @@ build
 
 # Downloaded formatter JAR (now fetched from GitHub releases)
 src/main/resources/lib/
+
+# Local git worktrees
+.agents/worktrees/
