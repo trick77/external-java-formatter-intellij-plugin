@@ -5,6 +5,8 @@ version: 2
 updates:
   # Maintain dependencies for Gradle dependencies
   - package-ecosystem: "gradle"
+    cooldown:
+      default-days: 7
     directory: "/"
     target-branch: "master"
     schedule:
@@ -17,6 +19,8 @@ updates:
           - "org.jetbrains.*"
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
+    cooldown:
+      default-days: 7
     directory: "/"
     target-branch: "master"
     schedule:
